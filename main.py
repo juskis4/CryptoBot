@@ -71,27 +71,26 @@ async def on_message(message):
       await message.channel.send(embed=embed)
 
     else:
-      await message.channel.send('This crypto may be unsuported! Write $help for further instructions')
-  
-  #prints the supported crypto list
-  if message.content.startswith('$list'):
-    cryptoSupportedList = [key for key in db.keys()]
-    await message.channel.send(cryptoSupportedList)
+      embed=discord.Embed(title="Error", description="This crypto may be unsuported! Write $help for further instructions", color=0x109319)
+      await message.channel.send(embed=embed)
 
   #checks if a crypto is supported
   if message.content.startswith('$support '):
     cryptoToBeChecked = message.content.split('$support ',1)[1].lower()
     if isCryptoSupported(cryptoToBeChecked):
-      await message.channel.send('Yes I do support this cryptocurrency!')
+      embed=discord.Embed(title="Do I support it?", description="Yes I do support {}!".format(cryptoToBeChecked), color=0x109319)
+      await message.channel.send(embed=embed)
     else:
-      await message.channel.send('Sorry but I am not aware of this cryptocurrency')
+      embed=discord.Embed(title="Do I support it?", description="Sorry but I do not support {}".format(cryptoToBeChecked), color=0x109319)
+      await message.channel.send(embed=embed)
+
   #sends a list of commands
   if message.content.startswith('$help'):
     embed=discord.Embed(title="Commands :writing_hand:", description="Here is a list of commands I have:", color=0x109319)
     
-    embed.add_field(name="$price cryptocurrency", value="Get the current price of a cryptocurrency you typed in", inline=True)
+    embed.add_field(name="$price cryptocurrency", value="Get the current price of a cryptocurrency you typed in", inline=False)
 
-    embed.add_field(name="$list", value="Get a list of cryptocurrencies I support", inline=True)
+    embed.add_field(name="$list", value="Get a list of cryptocurrencies I support", inline=False)
 
     embed.add_field(name="$support cryptocurrency", value="Check if I support the cryptocurrency you typed in", inline=False)
 
