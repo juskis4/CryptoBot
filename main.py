@@ -89,9 +89,7 @@ async def on_message(message):
     embed=discord.Embed(title="Commands :writing_hand:", description="Here is a list of commands I have:", color=0x109319)
     
     embed.add_field(name="$price cryptocurrency", value="Get the current price of a cryptocurrency you typed in", inline=False)
-
-    embed.add_field(name="$list", value="Get a list of cryptocurrencies I support", inline=False)
-
+    
     embed.add_field(name="$support cryptocurrency", value="Check if I support the cryptocurrency you typed in", inline=False)
 
     await message.channel.send(embed=embed)
