@@ -1,4 +1,5 @@
-import os
+from config import TOKEN
+import config
 import discord
 import requests
 from replit import db
@@ -12,6 +13,15 @@ def get24hChange(crypto):
   data = data[crypto]
   change = data['eur_24h_change']
   return round(change, 2)
+
+#function used to get 24h volume of a crypto
+def get24hVolume(crypto):
+  URL = 'https://api.coingecko.com/api/v3/simple/price?ids={}&vs_currencies=eur&include_market_cap=false&include_24hr_vol=true&include_24hr_change=false&include_last_updated_at=false'.format(crypto)
+  r = requests.get(url = URL)
+  data = r.json()
+  data = data[crypto]
+  volume = data['eur_24h_vol']
+  return round(volume, 1)
 
 #getting crypto prices
 def getCryptoPrices(crypto):
@@ -77,6 +87,15 @@ async def on_message(message):
       embed=discord.Embed(title="Error", description="This crypto may be unsuported! Write $help for further instructions", color=0x109319)
       await message.channel.send(embed=embed)
 
+#Shows 24h Trading Volume of a cryptocurrency
+  if message.content.startswith('$vol '):
+    cryptoName = message.content.split('$vol ',1)[1].lower()
+    if isCryptoSupported(cryptoName):
+      embed=discord.Embed(title=cryptoName.capitalize(), description="24 hour volume: **€{}**".format(get24hVolume(cryptoName)), color = 0x109319)
+      await message.channel.send(embed=embed)
+    else:
+      embed=discord.Embed(title="Error", description="This crypto may be unsuported! Write $help for further instructions", color=0x109319)
+      await message.channel.send(embed=embed)
 
   #checks if a crypto is supported
   if message.content.startswith('$support '):
@@ -98,12 +117,13 @@ async def on_message(message):
 
     embed.add_field(name="$support cryptocurrency", value="Check if I support the cryptocurrency you typed in", inline=False)
 
+    embed.add_field(name="$vol cryptocurrency", value="Shows 24h Trading Volume of the cryptocurrency you typed in", inline=False)
+
     await message.channel.send(embed=embed)
   
             
 
-my_secret = os.environ['password']
-client.run(my_secret)
+client.run(TOKEN)
 
 
 
