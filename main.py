@@ -1,8 +1,6 @@
 import os
 import discord
 import requests
-import json
-import pprint
 from replit import db
 
 
@@ -36,12 +34,15 @@ def isCryptoSupported(crypto):
   else:
     return False
 
+
 #instantiate a discord client
 client = discord.Client()
+
 
 @client.event
 async def on_ready():
   print('You have logged in as {0.user}'.format(client))
+
 
 #called when there is a message in the chat
 @client.event
@@ -49,9 +50,11 @@ async def on_message(message):
   if message.author == client.user:
     return 
 
+
   if message.content.startswith('$hello'):
     embed=discord.Embed(title="Hello! :wave:", description="To get a list of my commands type $help", color=0x109319)
     await message.channel.send(embed=embed)
+
 
   #Gets the price of a crypto 
   if message.content.startswith('$price '):
@@ -67,16 +70,18 @@ async def on_message(message):
       price = (f'The current price of **{cryptoName.capitalize()}** is: **{getCryptoPrices(cryptoName)}** EUR')
 
       embed=discord.Embed(title=cryptoName.capitalize(), description=price, color=color)
-      embed.add_field(name ="--------------------------------------------", value="**24 Hour change:** {}%".format(change))
+      embed.add_field(name ="--------------------------------------------------", value="**24 Hour change:** {}%".format(change))
       await message.channel.send(embed=embed)
 
     else:
       embed=discord.Embed(title="Error", description="This crypto may be unsuported! Write $help for further instructions", color=0x109319)
       await message.channel.send(embed=embed)
 
+
   #checks if a crypto is supported
   if message.content.startswith('$support '):
     cryptoToBeChecked = message.content.split('$support ',1)[1].lower()
+    #Checking if crypto is supported
     if isCryptoSupported(cryptoToBeChecked):
       embed=discord.Embed(title="Do I support it?", description="Yes I do support {}!".format(cryptoToBeChecked), color=0x109319)
       await message.channel.send(embed=embed)
@@ -84,12 +89,13 @@ async def on_message(message):
       embed=discord.Embed(title="Do I support it?", description="Sorry but I do not support {}".format(cryptoToBeChecked), color=0x109319)
       await message.channel.send(embed=embed)
 
+
   #sends a list of commands
   if message.content.startswith('$help'):
     embed=discord.Embed(title="Commands :writing_hand:", description="Here is a list of commands I have:", color=0x109319)
     
     embed.add_field(name="$price cryptocurrency", value="Get the current price of a cryptocurrency you typed in", inline=False)
-    
+
     embed.add_field(name="$support cryptocurrency", value="Check if I support the cryptocurrency you typed in", inline=False)
 
     await message.channel.send(embed=embed)
