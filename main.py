@@ -1,5 +1,4 @@
 from config import TOKEN
-import config
 import discord
 import requests
 from replit import db
